@@ -10,7 +10,15 @@ resource "aws_s3_bucket" "action_dist" {
 
 resource "aws_s3_bucket_acl" "action_dist_acl" {
   bucket = aws_s3_bucket.action_dist.id
+  depends_on = [aws_s3_bucket_ownership_controls.s3_bucket_acl_ownership]
   acl    = "private"
+}
+
+resource "aws_s3_bucket_ownership_controls" "s3_bucket_acl_ownership" {
+  bucket = aws_s3_bucket.action_dist.id
+  rule {
+    object_ownership = "ObjectWriter"
+  }
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "bucket-config" {
